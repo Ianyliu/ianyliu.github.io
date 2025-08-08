@@ -7,7 +7,7 @@ redirect_from:
   - /about.html
 ---
 
-![Image of me doing dance](/images/ian-splits.jpeg){: .align-right width="300px"} I'm currently pursuing my Master's in biostatistics at Brown University, where my research focuses on developing and applying deep learning methods for spatial transcriptomics. Currently, I'm interning at the Wake Forest Center for Artificial Intelligence Research, collaborating with Prof. [Da Ma](https://da-ma-dm.github.io/) on neuroimaging and graph neural networks. I'm also a Perplexity AI Fellow, part-time volunteer researcher at Northern Research Institute of Health, and vice president of the Taiwan Graduate Student Association at Brown.
+![Image of me doing dance](/images/ian-splits.jpeg){: .align-right width="300px"} I'm currently pursuing my Master's in biostatistics at Brown University, where my research focuses on developing and applying deep learning methods for spatial transcriptomics. I just finished interning at the Wake Forest Center for Artificial Intelligence Research, collaborating with Prof. [Da Ma](https://da-ma-dm.github.io/) on neuroimaging and graph neural networks. I'm also a Perplexity AI Fellow, part-time volunteer researcher at Northern Research Institute of Health, and vice president of the Taiwan Graduate Student Association at Brown.
 
 Before Brown, I earned my B.S. in Data Science from Fei Tian College Middletown, where I co-founded Link Club——the largest student-run organization on campus. I was honored as the college’s first-ever recipient of the Distinguished College Achievement Award, selected by unanimous committee vote, and delivered the reception speech to an audience including the city mayor and New York State Assembly woman.
 
