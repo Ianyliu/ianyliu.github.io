@@ -2,9 +2,19 @@
 
 <script>
   (function() {
+    // Gating for intro animation
+    var introPlayed = sessionStorage.getItem('introPlayed');
+    if (!introPlayed) {
+      document.body.classList.add('neon-preload-active');
+      sessionStorage.setItem('introPlayed', 'true');
+    } else {
+      document.body.style.opacity = '1';
+    }
+
     // Remove preload class on first frame to avoid re-triggering
     var onReady = function() {
       document.body.classList.remove('neon-preload-active');
+      document.body.style.opacity = '1';
     };
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', onReady);
