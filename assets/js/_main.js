@@ -110,9 +110,20 @@ $(document).ready(function () {
     var $img = $(this);
     // skip if it’s already wrapped in an <a.image-popup>
     if ( ! $img.parent().is('a.image-popup') ) {
-      $('<a>')
+      var $link = $('<a>')
         .addClass('image-popup')
-        .attr('href', $img.attr('src'))
+        .attr('href', $img.attr('src'));
+      var alignmentClass = ['align-left', 'align-right', 'align-center'].find(function (className) {
+        return $img.hasClass(className);
+      });
+
+      if (alignmentClass) {
+        $link.addClass('image-popup--' + alignmentClass);
+        $img.removeClass(alignmentClass);
+      }
+
+      $link
+        .attr('aria-label', 'Open image: ' + ($img.attr('alt') || 'preview'))
         .insertBefore($img)   // place the <a> right before the <img>
         .append($img);        // move the <img> into the <a>
     }
@@ -130,9 +141,8 @@ $(document).ready(function () {
     image: {
       tError: '<a href="%url%">Image #%curr%</a> could not be loaded.',
     },
-    removalDelay: 500, // Delay in milliseconds before popup is removed
-    // Class that is added to body when popup is open.
-    // make it unique to apply your CSS animations just to this exact popup
+    removalDelay: 200,
+    // Scope the matching open and close transitions in the motion stylesheet.
     mainClass: 'mfp-zoom-in',
     callbacks: {
       beforeOpen: function () {
