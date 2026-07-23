@@ -34,7 +34,7 @@ author:
   # Academic websites
   academia         : # URL
   arxiv            : # URL - Update with the correct link to your profile
-  googlescholar    : # "https://scholar.google.com/citations?user=PS_CX0AAAAAJ"
+  googlescholar    : "https://scholar.google.com/citations?hl=en&tzom=240&user=FOOA3twAAAAJ&inst=3404029378192158848"
   impactstory      : # URL
   orcid            : # "https://orcid.org/0009-0007-8656-6775"
   semantic         : # URL
@@ -149,7 +149,7 @@ social:
 
 # Analytics
 analytics:
-  provider               :  "false" # false (default), "google", "google-universal", "google-analytics-4", "custom"
+  provider               : false # false (default), "google", "google-universal", "google-analytics-4", "custom"
   google:
     tracking_id          :
 
@@ -168,8 +168,12 @@ exclude:
   - .jekyll-assets-cache
   - .sass-cache
   - assets/js/_main.js
+  - assets/js/collapse.js
   - assets/js/plugins
   - assets/js/vendor
+  - assets/css/collapse.css
+  - assets/css/cv-layout.css
+  - assets/css/cv-style.css
   - CHANGELOG
   - Capfile
   - config
@@ -275,7 +279,7 @@ defaults:
       layout: single
       author_profile: true
       share: true
-      comment: true
+      comments: true
   # _talks
   - scope:
       path: ""

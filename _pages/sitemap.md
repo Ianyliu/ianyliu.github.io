@@ -11,7 +11,9 @@ A list of all the posts and pages found on the site. For you robots out there, t
 
 <h2>Pages</h2>
 {% for post in site.pages %}
-  {% include archive-single.html %}
+  {% unless post.sitemap == false %}
+    {% include archive-single.html %}
+  {% endunless %}
 {% endfor %}
 
 <h2>Posts</h2>
@@ -30,7 +32,7 @@ A list of all the posts and pages found on the site. For you robots out there, t
   {% endif %}
 {% endunless %}
 {% for post in collection.docs %}
-  {% unless collection.output == false or collection.label == "posts" %}
+  {% unless collection.output == false or collection.label == "posts" or post.sitemap == false %}
   {% include archive-single.html %}
   {% endunless %}
 {% endfor %}

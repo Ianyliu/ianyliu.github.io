@@ -189,7 +189,7 @@
     }
   }
 
-  button {
+  > button {
     position: absolute;
     height: 2.5rem;
     right: 0;
@@ -225,12 +225,29 @@
       }
     }
 
-    #theme-toggle {
-      a {
-        width: 25px;
-        display: flex;
-        justify-content: center;
-        cursor: pointer;
+    .theme-toggle {
+      position: static;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      margin-left: 0.5rem;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--global-masthead-link-color);
+      cursor: pointer;
+
+      &:hover {
+        color: var(--global-masthead-link-color-hover);
+        background: var(--global-border-color);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--global-link-color);
+        outline-offset: 2px;
       }
     }
 

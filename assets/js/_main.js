@@ -3,91 +3,95 @@
    ========================================================================== */
 
 $(document).ready(function () {
-  // detect OS/browser preference
-  const browserPref = window.matchMedia('(prefers-color-scheme: dark)').matches
-    ? 'dark'
-    : 'light';
+  var themeMedia = window.matchMedia('(prefers-color-scheme: dark)');
 
-  // Set the theme on page load or when explicitly called
+  var getStoredTheme = function () {
+    try {
+      return window.localStorage.getItem("theme");
+    } catch (error) {
+      return null;
+    }
+  };
+
+  var storeTheme = function (theme) {
+    try {
+      window.localStorage.setItem("theme", theme);
+    } catch (error) {
+      // The selected theme still applies for this page when storage is blocked.
+    }
+  };
+
   var setTheme = function (theme) {
-    const use_theme =
+    var selectedTheme =
       theme ||
-      localStorage.getItem("theme") ||
+      getStoredTheme() ||
       $("html").attr("data-theme") ||
-      browserPref;
+      (themeMedia.matches ? "dark" : "light");
+    var isDark = selectedTheme === "dark";
 
-    if (use_theme === "dark") {
+    if (isDark) {
       $("html").attr("data-theme", "dark");
       $("#theme-icon").removeClass("fa-sun").addClass("fa-moon");
-    } else if (use_theme === "light") {
+    } else {
       $("html").removeAttr("data-theme");
       $("#theme-icon").removeClass("fa-moon").addClass("fa-sun");
     }
+
+    $("#theme-toggle")
+      .attr("aria-pressed", isDark)
+      .attr("aria-label", isDark ? "Use light theme" : "Use dark theme");
   };
 
   setTheme();
 
-  // if user hasn't chosen a theme, follow OS changes
-  window
-    .matchMedia('(prefers-color-scheme: dark)')
-    .addEventListener("change", (e) => {
-      if (!localStorage.getItem("theme")) {
-        setTheme(e.matches ? "dark" : "light");
-      }
-    });
-
-  // Toggle the theme manually
-  var toggleTheme = function () {
-    const current_theme = $("html").attr("data-theme");
-    const new_theme = current_theme === "dark" ? "light" : "dark";
-    localStorage.setItem("theme", new_theme);
-    setTheme(new_theme);
+  var followSystemTheme = function (event) {
+    if (!getStoredTheme()) {
+      setTheme(event.matches ? "dark" : "light");
+    }
   };
 
-  $('#theme-toggle').on('click', toggleTheme);
+  if (themeMedia.addEventListener) {
+    themeMedia.addEventListener("change", followSystemTheme);
+  } else if (themeMedia.addListener) {
+    themeMedia.addListener(followSystemTheme);
+  }
+
+  var toggleTheme = function () {
+    var newTheme = $("html").attr("data-theme") === "dark" ? "light" : "dark";
+    storeTheme(newTheme);
+    setTheme(newTheme);
+  };
+
+  $("#theme-toggle").on("click", toggleTheme);
 
   // These should be the same as the settings in _variables.scss
   const scssLarge = 925; // pixels
-
-  // Sticky footer
-  var bumpIt = function () {
-    $("body").css("margin-bottom", $(".page__footer").outerHeight(true));
-  },
-    didResize = false;
-
-  bumpIt();
-
-  $(window).resize(function () {
-    didResize = true;
-  });
-  setInterval(function () {
-    if (didResize) {
-      didResize = false;
-      bumpIt();
-    }
-  }, 250);
 
   // FitVids init
   fitvids();
 
   // Follow menu drop down
   $(".author__urls-wrapper button").on("click", function () {
-    $(".author__urls").fadeToggle("fast", function () { });
-    $(".author__urls-wrapper button").toggleClass("open");
+    var $button = $(this);
+    $(".author__urls").fadeToggle("fast", function () {
+      $button.attr("aria-expanded", $(this).is(":visible"));
+    });
+    $button.toggleClass("open");
   });
 
   // Restore the follow menu if toggled on a window resize
   jQuery(window).on('resize', function () {
     if ($('.author__urls.social-icons').css('display') == 'none' && $(window).width() >= scssLarge) {
-      $(".author__urls").css('display', 'block')
+      $(".author__urls").css('display', 'block');
+      $(".author__urls-wrapper button").attr("aria-expanded", true);
     }
   });
 
-  // init smooth scroll, this needs to be slightly more than then fixed masthead height
-  $("a").smoothScroll({ 
-    offset: -75, // needs to match $masthead-height
+  // Smooth only same-page fragment links.
+  $("a[href^='#']:not([href='#'])").smoothScroll({
+    offset: -75,
     preventDefault: false,
-  }); 
+  });
 
   // add lightbox class to all image links
   // Add "image-popup" to links ending in image extensions,
