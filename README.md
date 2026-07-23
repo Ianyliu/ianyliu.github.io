@@ -53,6 +53,15 @@ npm run build:js
 `npm test` verifies syntax and fails when `assets/js/main.min.js` is not in sync
 with its sources.
 
+The homepage cinematic runs once per browser session, respects reduced-motion
+preferences, and provides Skip and Replay controls. Its browser behavior is
+covered with Playwright:
+
+```bash
+npx playwright install --with-deps chromium
+npm run test:browser
+```
+
 ## Validation
 
 Before publishing, run:
@@ -62,6 +71,7 @@ npm test
 bundle exec jekyll build --trace
 bundle exec jekyll doctor
 bundle exec ruby scripts/verify_site.rb
+npm run test:browser
 ```
 
 The same checks run in GitHub Actions. The generated `_site/` directory and

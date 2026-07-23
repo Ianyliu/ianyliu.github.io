@@ -190,10 +190,14 @@ exclude:
   - markdown_generator
   - node_modules
   - package.json*
+  - playwright.config.js
+  - playwright-report
   - Rakefile
   - README
   - README.md
   - scripts
+  - tests
+  - test-results
   - talkmap.ipynb
   - talkmap.py
   - talkmap_out.ipynb

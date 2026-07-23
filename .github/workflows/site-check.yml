@@ -39,6 +39,9 @@ jobs:
       - name: Install JavaScript dependencies
         run: npm ci
 
+      - name: Install browser runtime
+        run: npx playwright install --with-deps chromium
+
       - name: Verify JavaScript bundle
         run: npm test
 
@@ -52,6 +55,9 @@ jobs:
 
       - name: Validate generated site
         run: bundle exec ruby scripts/verify_site.rb
+
+      - name: Run browser smoke tests
+        run: npm run test:browser
 
       - name: Validate maintenance utilities
         run: |
