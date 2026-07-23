@@ -8,49 +8,45 @@
 import frontmatter
 import glob
 import getorg
-from geopy import Nominatim
-from geopy.exc import GeocoderTimedOut
+from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderServiceError, GeocoderTimedOut
 
 # Set the default timeout, in seconds
 TIMEOUT = 5
 
 # Collect the Markdown files
-g = glob.glob("_talks/*.md")
+talk_files = sorted(glob.glob("_talks/*.md"))
 
 # Prepare to geolocate
-geocoder = Nominatim(user_agent="academicpages.github.io")
+geocoder = Nominatim(user_agent="ianyliu.github.io-talkmap")
 location_dict = {}
-location = ""
-permalink = ""
-title = ""
 
 # Perform geolocation
-for file in g:
+for file in talk_files:
     # Read the file
     data = frontmatter.load(file)
     data = data.to_dict()
 
-    # Press on if the location is not present
-    if 'location' not in data:
+    # Ignore drafts, retained template examples, and entries without locations.
+    if data.get("published") is False or not data.get("location"):
         continue
 
     # Prepare the description
-    title = data['title'].strip()
-    venue = data['venue'].strip()
-    location = data['location'].strip()
+    title = data.get("title", "Untitled talk").strip()
+    venue = data.get("venue", "Venue unavailable").strip()
+    location = data["location"].strip()
     description = f"{title}<br />{venue}; {location}"
 
     # Geocode the location and report the status
     try:
-        location_dict[description] = geocoder.geocode(location, timeout=TIMEOUT)
-        print(description, location_dict[description])
-    except ValueError as ex:
-        print(f"Error: geocode failed on input {location} with message {ex}")
-    except GeocoderTimedOut as ex:
-        print(f"Error: geocode timed out on input {location} with message {ex}")
-    except Exception as ex:
-        print(f"An unhandled exception occurred while processing input {location} with message {ex}")
+        coordinates = geocoder.geocode(location, timeout=TIMEOUT)
+        if coordinates is None:
+            print(f"Warning: no coordinates found for {location}")
+            continue
+        location_dict[description] = coordinates
+        print(description, coordinates)
+    except (GeocoderServiceError, GeocoderTimedOut, ValueError) as error:
+        print(f"Warning: geocoding failed for {location}: {error}")
 
 # Save the map
-m = getorg.orgmap.create_map_obj()
 getorg.orgmap.output_html_cluster_map(location_dict, folder_name="talkmap", hashed_usernames=False)

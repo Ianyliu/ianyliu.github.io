@@ -1,27 +1,26 @@
 {
-  "name": "academic-pages",
-  "version": "0.8.1.1",
-  "description": "Academic Pages Mistakes Jekyll theme npm build scripts",
+  "name": "ianyliu-github-pages",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Build tooling for Ian Liu's Jekyll portfolio",
   "repository": {
     "type": "git",
-    "url": "https://github.com/academicpages/academicpages.github.io"
+    "url": "https://github.com/Ianyliu/ianyliu.github.io.git"
   },
   "keywords": [
     "jekyll",
     "theme",
     "minimal"
   ],
-  "contributors": [
-    "Michael Rose",
-    "Robert Zupko"
-  ],
+  "contributors": ["Ian Liu", "Academic Pages contributors"],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/academicpages/academicpages.github.io/issues"
+    "url": "https://github.com/Ianyliu/ianyliu.github.io/issues"
   },
-  "homepage": "https://github.com/academicpages/academicpages.github.io",
+  "homepage": "https://ianyliu.github.io/",
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">=18",
+    "npm": ">=9"
   },
   "dependencies": {
     "fitvids": "^2.1.1",
@@ -34,8 +33,9 @@
     "uglify-js": "^3.17.4"
   },
   "scripts": {
-    "uglify": "uglifyjs node_modules/jquery/dist/jquery.min.js node_modules/fitvids/dist/fitvids.min.js node_modules/magnific-popup/dist/jquery.magnific-popup.min.js node_modules/jquery-smooth-scroll/jquery.smooth-scroll.min.js assets/js/plugins/jquery.greedy-navigation.js assets/js/_main.js -c -m -o assets/js/main.min.js",
+    "build:js": "uglifyjs node_modules/jquery/dist/jquery.min.js node_modules/fitvids/dist/fitvids.min.js node_modules/magnific-popup/dist/jquery.magnific-popup.min.js node_modules/jquery-smooth-scroll/jquery.smooth-scroll.min.js assets/js/plugins/jquery.greedy-navigation.js assets/js/_main.js -c -m -o assets/js/main.min.js",
+    "check:js": "node --check assets/js/_main.js && node --check assets/js/plugins/jquery.greedy-navigation.js && npm run build:js && git diff --exit-code -- assets/js/main.min.js",
     "watch:js": "onchange \"assets/js/**/*.js\" -e \"assets/js/main.min.js\" -- npm run build:js",
-    "build:js": "npm run uglify"
+    "test": "node --check assets/js/_main.js && node --check assets/js/plugins/jquery.greedy-navigation.js && uglifyjs node_modules/jquery/dist/jquery.min.js node_modules/fitvids/dist/fitvids.min.js node_modules/magnific-popup/dist/jquery.magnific-popup.min.js node_modules/jquery-smooth-scroll/jquery.smooth-scroll.min.js assets/js/plugins/jquery.greedy-navigation.js assets/js/_main.js -c -m -o assets/js/main.min.js && git diff --exit-code -- assets/js/main.min.js"
   }
 }

@@ -5,12 +5,11 @@ _site/
 # Ignore the directory for local files during development
 local/
 
-# Ignore the Gemfile that is generated
-Gemfile.lock
-
 # Ignore files created by npm
 node_modules
-package-lock.json
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
 
 # Ignore the vendor file and bundle for alternative installation
 vendor/
