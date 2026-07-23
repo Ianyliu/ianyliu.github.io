@@ -13,7 +13,7 @@ title                    : "Ian Liu"
 title_separator          : "-"
 name                     : &name "Ian Liu"
 description              : &description "personal description"
-url                      : https://ianyliu.github.io/ # the base hostname & protocol for your site e.g. "https://[your GitHub username].github.io" or if you already have some other page hosted on Github then use "https://[your GitHub username].github.io/[Your Repo Name]"
+url                      : https://ianyliu.github.io # the base hostname & protocol for your site e.g. "https://[your GitHub username].github.io" or if you already have some other page hosted on Github then use "https://[your GitHub username].github.io/[Your Repo Name]"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "ianyliu/ianyliu.github.io"
 
@@ -165,8 +165,11 @@ exclude:
   - .asset-cache
   - .bundle
   - .github
+  - .dockerignore
   - .jekyll-assets-cache
   - .sass-cache
+  - CONTRIBUTING.md
+  - docker-compose.yaml
   - assets/js/_main.js
   - assets/js/collapse.js
   - assets/js/plugins
@@ -184,10 +187,16 @@ exclude:
   - LICENSE
   - local
   - log
+  - markdown_generator
   - node_modules
   - package.json*
   - Rakefile
   - README
+  - README.md
+  - scripts
+  - talkmap.ipynb
+  - talkmap.py
+  - talkmap_out.ipynb
   - tmp
   - vendor
 keep_files:
