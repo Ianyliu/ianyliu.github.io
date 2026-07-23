@@ -158,6 +158,14 @@ unless home.at_css("[data-cinematic-skip]") && home.at_css("[data-cinematic-repl
   errors << "/index.html: cinematic controls are missing"
 end
 
+playback_script = home.css("script").find do |script|
+  script.text.include?("ian-cinematic-play-count-v3")
+end
+unless playback_script&.text&.include?("introPlayCount < maximumAutomaticPlays") &&
+       playback_script&.text&.include?("maximumAutomaticPlays = 9")
+  errors << "/index.html: nine-visit cinematic playback policy is missing"
+end
+
 if portfolio.at_css("body.home--cinematic")
   errors << "/portfolio/index.html: homepage cinematic hook leaked onto an internal page"
 end

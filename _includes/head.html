@@ -29,18 +29,27 @@
   }());
   {% if page.url == "/" %}
   (function () {
+    var storageKey = 'ian-cinematic-play-count-v3';
+    var maximumAutomaticPlays = 9;
     var reduceMotion = window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var introSeen = false;
+    var introPlayCount = 0;
 
     try {
-      introSeen = window.sessionStorage.getItem('ian-cinematic-seen-v2') === '1';
+      var storedCount = parseInt(window.localStorage.getItem(storageKey), 10);
+      introPlayCount = !isNaN(storedCount) && storedCount > 0 ? storedCount : 0;
     } catch (error) {
       /* A self-terminating CSS sequence remains safe when storage is blocked. */
     }
 
-    if (!reduceMotion && !introSeen) {
+    if (!reduceMotion && introPlayCount < maximumAutomaticPlays) {
       document.documentElement.classList.add('cinematic-intro-pending');
+
+      try {
+        window.localStorage.setItem(storageKey, String(introPlayCount + 1));
+      } catch (error) {
+        /* Continue playing safely when the browser blocks persistent storage. */
+      }
     }
   }());
   {% endif %}

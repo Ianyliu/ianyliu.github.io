@@ -11,19 +11,10 @@ $(document).ready(function () {
     var skipButton = document.querySelector("[data-cinematic-skip]");
     var replayButton = document.querySelector("[data-cinematic-replay]");
     var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    var storageKey = "ian-cinematic-seen-v2";
 
     if (!intro || !skipButton || !replayButton) {
       return;
     }
-
-    var markSeen = function () {
-      try {
-        window.sessionStorage.setItem(storageKey, "1");
-      } catch (error) {
-        // The intro still completes normally when session storage is blocked.
-      }
-    };
 
     var isActive = function () {
       return root.classList.contains("cinematic-intro-pending");
@@ -37,7 +28,6 @@ $(document).ready(function () {
       root.classList.remove("cinematic-intro-pending");
       root.classList.add("cinematic-intro-complete");
       intro.setAttribute("aria-hidden", "true");
-      markSeen();
     };
 
     var replay = function () {

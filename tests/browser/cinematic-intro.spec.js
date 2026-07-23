@@ -2,9 +2,9 @@ const { test, expect } = require("@playwright/test");
 
 const INTRO_STATE = "cinematic-intro-pending";
 const COMPLETE_STATE = "cinematic-intro-complete";
-const STORAGE_KEY = "ian-cinematic-seen-v2";
+const STORAGE_KEY = "ian-cinematic-play-count-v3";
 
-test("plays the complete four-second focal sequence once per session", async ({ page }) => {
+test("plays the complete four-second focal sequence and records the visit", async ({ page }) => {
   await page.goto("/");
 
   const root = page.locator("html");
@@ -24,17 +24,22 @@ test("plays the complete four-second focal sequence once per session", async ({ 
   expect(backgroundAnimations.starfield).toContain("cinematic-starfield");
   expect(backgroundAnimations.streak).toContain("cinematic-star-streak");
 
-  await page.waitForTimeout(2_600);
-  const identityOpacity = await identity.evaluate((element) =>
-    Number.parseFloat(getComputedStyle(element).opacity)
-  );
-  expect(identityOpacity).toBeGreaterThan(0.5);
+  await page.waitForTimeout(2_400);
+  await expect
+    .poll(
+      () =>
+        identity.evaluate((element) =>
+          Number.parseFloat(getComputedStyle(element).opacity)
+        ),
+      { timeout: 1_200 }
+    )
+    .toBeGreaterThan(0.5);
 
   await expect(root).toHaveClass(new RegExp(COMPLETE_STATE), { timeout: 5_000 });
   await expect(intro).toBeHidden();
   await expect(page.locator("[data-cinematic-replay]")).toBeVisible();
   await expect
-    .poll(() => page.evaluate((key) => sessionStorage.getItem(key), STORAGE_KEY))
+    .poll(() => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY))
     .toBe("1");
 
   const runningIntroAnimations = await intro.evaluate((element) =>
@@ -45,8 +50,10 @@ test("plays the complete four-second focal sequence once per session", async ({ 
   expect(runningIntroAnimations).toBe(0);
 
   await page.reload();
-  await expect(root).not.toHaveClass(new RegExp(INTRO_STATE));
-  await expect(intro).toBeHidden();
+  await expect(root).toHaveClass(new RegExp(INTRO_STATE));
+  await expect
+    .poll(() => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY))
+    .toBe("2");
 });
 
 test("supports skip, replay, Escape, and pointer dismissal", async ({ page }) => {
@@ -56,6 +63,9 @@ test("supports skip, replay, Escape, and pointer dismissal", async ({ page }) =>
   const intro = page.locator("[data-cinematic-intro]");
   const replay = page.locator("[data-cinematic-replay]");
 
+  await expect
+    .poll(() => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY))
+    .toBe("1");
   await page.locator("[data-cinematic-skip]").click();
   await expect(root).toHaveClass(new RegExp(COMPLETE_STATE));
   await expect(intro).toHaveAttribute("aria-hidden", "true");
@@ -74,6 +84,30 @@ test("supports skip, replay, Escape, and pointer dismissal", async ({ page }) =>
   await expect(root).toHaveClass(new RegExp(INTRO_STATE));
   await intro.click({ position: { x: 24, y: 80 } });
   await expect(root).toHaveClass(new RegExp(COMPLETE_STATE));
+  await expect
+    .poll(() => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY))
+    .toBe("1");
+});
+
+test("automatically plays on the first nine homepage visits", async ({ page }) => {
+  const root = page.locator("html");
+
+  for (let visit = 1; visit <= 9; visit += 1) {
+    await page.goto("/");
+    await expect(root).toHaveClass(new RegExp(INTRO_STATE));
+    await expect
+      .poll(() => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY))
+      .toBe(String(visit));
+    await page.locator("[data-cinematic-skip]").click();
+  }
+
+  await page.goto("/");
+  await expect(root).not.toHaveClass(new RegExp(INTRO_STATE));
+  await expect(root).toHaveClass(new RegExp(COMPLETE_STATE));
+  await expect(page.locator("[data-cinematic-intro]")).toBeHidden();
+  await expect
+    .poll(() => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY))
+    .toBe("9");
 });
 
 test("bypasses decorative motion when reduced motion is requested", async ({ page }) => {
@@ -84,6 +118,9 @@ test("bypasses decorative motion when reduced motion is requested", async ({ pag
   await expect(page.locator("[data-cinematic-intro]")).toBeHidden();
   await expect(page.locator("[data-cinematic-replay]")).toBeHidden();
   await expect(page.locator("#main")).toBeVisible();
+  await expect
+    .poll(() => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY))
+    .toBe(null);
 });
 
 test("keeps content available when JavaScript or the main bundle is unavailable", async ({
