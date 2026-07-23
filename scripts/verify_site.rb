@@ -145,8 +145,25 @@ unless home.at_css("body.home--cinematic")
   errors << "/index.html: missing homepage cinematic hook"
 end
 
+unless home.at_css("[data-cinematic-intro] .cinematic-intro__aperture img[src$='/images/ian-splits.jpeg']")
+  errors << "/index.html: cinematic focal image is missing"
+end
+
+unless home.css(".cinematic-intro__paths path").length == 8 &&
+       home.css(".cinematic-intro__nodes circle").length == 12
+  errors << "/index.html: cinematic network structure is incomplete"
+end
+
+unless home.at_css("[data-cinematic-skip]") && home.at_css("[data-cinematic-replay]")
+  errors << "/index.html: cinematic controls are missing"
+end
+
 if portfolio.at_css("body.home--cinematic")
   errors << "/portfolio/index.html: homepage cinematic hook leaked onto an internal page"
+end
+
+if portfolio.at_css("[data-cinematic-intro], [data-cinematic-replay]")
+  errors << "/portfolio/index.html: cinematic markup leaked onto an internal page"
 end
 
 unless home.at_css("a[href='#{SCHOLAR_URL}']")
@@ -174,6 +191,10 @@ end
 css = SITE_ROOT.join("assets/css/main.css").read
 errors << "/assets/css/main.css: cinematic motion CSS is missing" unless css.include?("home--cinematic")
 errors << "/assets/css/main.css: reduced-motion fallback is missing" unless css.include?("prefers-reduced-motion")
+errors << "/assets/css/main.css: cinematic duration is not four seconds" unless css.include?("cinematic-intro-shell 4s")
+if css.include?("cinematic-shooting-star") || css.include?("cinematic-veil")
+  errors << "/assets/css/main.css: retired fireworks animation remains in production CSS"
+end
 
 if errors.empty?
   puts "Verified #{html_files.length} HTML files and #{checked_references} internal references."

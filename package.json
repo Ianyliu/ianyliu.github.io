@@ -29,6 +29,7 @@
     "magnific-popup": "^1.2.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.61.1",
     "onchange": "^7.1.0",
     "uglify-js": "^3.17.4"
   },
@@ -36,6 +37,7 @@
     "build:js": "uglifyjs node_modules/jquery/dist/jquery.min.js node_modules/fitvids/dist/fitvids.min.js node_modules/magnific-popup/dist/jquery.magnific-popup.min.js node_modules/jquery-smooth-scroll/jquery.smooth-scroll.min.js assets/js/plugins/jquery.greedy-navigation.js assets/js/_main.js -c -m -o assets/js/main.min.js",
     "check:js": "node --check assets/js/_main.js && node --check assets/js/plugins/jquery.greedy-navigation.js && npm run build:js && git diff --exit-code -- assets/js/main.min.js",
     "watch:js": "onchange \"assets/js/**/*.js\" -e \"assets/js/main.min.js\" -- npm run build:js",
-    "test": "node --check assets/js/_main.js && node --check assets/js/plugins/jquery.greedy-navigation.js && uglifyjs node_modules/jquery/dist/jquery.min.js node_modules/fitvids/dist/fitvids.min.js node_modules/magnific-popup/dist/jquery.magnific-popup.min.js node_modules/jquery-smooth-scroll/jquery.smooth-scroll.min.js assets/js/plugins/jquery.greedy-navigation.js assets/js/_main.js -c -m -o assets/js/main.min.js && git diff --exit-code -- assets/js/main.min.js"
+    "test": "node --check assets/js/_main.js && node --check assets/js/plugins/jquery.greedy-navigation.js && uglifyjs node_modules/jquery/dist/jquery.min.js node_modules/fitvids/dist/fitvids.min.js node_modules/magnific-popup/dist/jquery.magnific-popup.min.js node_modules/jquery-smooth-scroll/jquery.smooth-scroll.min.js assets/js/plugins/jquery.greedy-navigation.js assets/js/_main.js -c -m -o assets/js/main.min.js && git diff --exit-code -- assets/js/main.min.js",
+    "test:browser": "playwright test"
   }
 }
