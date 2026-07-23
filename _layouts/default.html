@@ -14,6 +14,9 @@ layout: compress
   <body{% if page.url == "/" %} class="home--cinematic"{% endif %}>
 
     {% include browser-upgrade.html %}
+    {% if page.url == "/" %}
+      {% include cinematic-intro.html %}
+    {% endif %}
     {% include masthead.html %}
 
     {{ content }}

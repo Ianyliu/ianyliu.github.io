@@ -5,6 +5,101 @@
 $(document).ready(function () {
   var themeMedia = window.matchMedia('(prefers-color-scheme: dark)');
 
+  var initializeCinematicIntro = function () {
+    var root = document.documentElement;
+    var intro = document.querySelector("[data-cinematic-intro]");
+    var skipButton = document.querySelector("[data-cinematic-skip]");
+    var replayButton = document.querySelector("[data-cinematic-replay]");
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var storageKey = "ian-cinematic-seen-v2";
+
+    if (!intro || !skipButton || !replayButton) {
+      return;
+    }
+
+    var markSeen = function () {
+      try {
+        window.sessionStorage.setItem(storageKey, "1");
+      } catch (error) {
+        // The intro still completes normally when session storage is blocked.
+      }
+    };
+
+    var isActive = function () {
+      return root.classList.contains("cinematic-intro-pending");
+    };
+
+    var finish = function () {
+      if (!isActive()) {
+        return;
+      }
+
+      root.classList.remove("cinematic-intro-pending");
+      root.classList.add("cinematic-intro-complete");
+      intro.setAttribute("aria-hidden", "true");
+      markSeen();
+    };
+
+    var replay = function () {
+      if (reduceMotion.matches) {
+        return;
+      }
+
+      root.classList.remove("cinematic-intro-complete");
+      intro.removeAttribute("aria-hidden");
+
+      // Removing and restoring the state class restarts the bounded CSS timeline.
+      void intro.offsetWidth;
+      root.classList.add("cinematic-intro-pending");
+    };
+
+    if (reduceMotion.matches) {
+      root.classList.remove("cinematic-intro-pending");
+      intro.setAttribute("aria-hidden", "true");
+    } else if (isActive()) {
+      intro.removeAttribute("aria-hidden");
+    } else {
+      root.classList.add("cinematic-intro-complete");
+      intro.setAttribute("aria-hidden", "true");
+    }
+
+    intro.addEventListener("click", finish);
+    skipButton.addEventListener("click", finish);
+    replayButton.addEventListener("click", replay);
+
+    intro.addEventListener("animationend", function (event) {
+      if (event.target === intro && event.animationName === "cinematic-intro-shell") {
+        finish();
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        finish();
+      }
+    });
+
+    document.addEventListener("focusin", function (event) {
+      if (isActive() && !intro.contains(event.target)) {
+        finish();
+      }
+    });
+
+    var handleMotionPreference = function (event) {
+      if (event.matches) {
+        finish();
+      }
+    };
+
+    if (reduceMotion.addEventListener) {
+      reduceMotion.addEventListener("change", handleMotionPreference);
+    } else if (reduceMotion.addListener) {
+      reduceMotion.addListener(handleMotionPreference);
+    }
+  };
+
+  initializeCinematicIntro();
+
   var getStoredTheme = function () {
     try {
       return window.localStorage.getItem("theme");

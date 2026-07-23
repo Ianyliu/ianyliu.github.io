@@ -27,6 +27,23 @@
       // Keep the server-rendered theme when browser storage is unavailable.
     }
   }());
+  {% if page.url == "/" %}
+  (function () {
+    var reduceMotion = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var introSeen = false;
+
+    try {
+      introSeen = window.sessionStorage.getItem('ian-cinematic-seen-v2') === '1';
+    } catch (error) {
+      // A self-terminating CSS sequence remains safe when storage is blocked.
+    }
+
+    if (!reduceMotion && !introSeen) {
+      document.documentElement.classList.add('cinematic-intro-pending');
+    }
+  }());
+  {% endif %}
 </script>
 
 <!-- For all browsers -->
