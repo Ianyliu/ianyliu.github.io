@@ -17,6 +17,13 @@ test("plays the complete four-second focal sequence once per session", async ({ 
   await expect(page.locator(".cinematic-intro__paths path")).toHaveCount(8);
   await expect(page.locator(".cinematic-intro__nodes circle")).toHaveCount(12);
 
+  const backgroundAnimations = await intro.evaluate((element) => ({
+    starfield: getComputedStyle(element, "::before").animationName,
+    streak: getComputedStyle(element, "::after").animationName,
+  }));
+  expect(backgroundAnimations.starfield).toContain("cinematic-starfield");
+  expect(backgroundAnimations.streak).toContain("cinematic-star-streak");
+
   await page.waitForTimeout(2_600);
   const identityOpacity = await identity.evaluate((element) =>
     Number.parseFloat(getComputedStyle(element).opacity)
