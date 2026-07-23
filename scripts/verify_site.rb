@@ -192,9 +192,8 @@ css = SITE_ROOT.join("assets/css/main.css").read
 errors << "/assets/css/main.css: cinematic motion CSS is missing" unless css.include?("home--cinematic")
 errors << "/assets/css/main.css: reduced-motion fallback is missing" unless css.include?("prefers-reduced-motion")
 errors << "/assets/css/main.css: cinematic duration is not four seconds" unless css.include?("cinematic-intro-shell 4s")
-if css.include?("cinematic-shooting-star") || css.include?("cinematic-veil")
-  errors << "/assets/css/main.css: retired fireworks animation remains in production CSS"
-end
+errors << "/assets/css/main.css: cinematic starfield is missing" unless css.include?("cinematic-starfield 4s")
+errors << "/assets/css/main.css: cinematic shooting star is missing" unless css.include?("cinematic-star-streak 4s")
 
 if errors.empty?
   puts "Verified #{html_files.length} HTML files and #{checked_references} internal references."
