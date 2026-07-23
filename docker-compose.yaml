@@ -2,7 +2,9 @@ services:
   jekyll-site:
     image: jekyll-site
     build: .
-    volumes: [ .:/usr/src/app ]
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
     ports: [ 4000:4000 ]
     user: 1000:1000
-    command: jekyll serve -H 0.0.0.0 -w
+    command: bundle exec jekyll serve -H 0.0.0.0 -w

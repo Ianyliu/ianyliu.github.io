@@ -1,0 +1,23 @@
+{% assign resource = include.resource %}
+{% if resource.citation or resource.paperurl or resource.slidesurl or resource.bibtexurl %}
+  <p class="resource-links{% if include.compact %} resource-links--compact{% endif %}">
+    {% if resource.citation %}
+      Recommended citation: {{ resource.citation }}
+      {% if resource.paperurl or resource.slidesurl or resource.bibtexurl %}<br>{% endif %}
+    {% endif %}
+    {% assign has_previous_link = false %}
+    {% if resource.paperurl %}
+      <a href="{{ resource.paperurl }}">Download Paper</a>
+      {% assign has_previous_link = true %}
+    {% endif %}
+    {% if resource.slidesurl %}
+      {% if has_previous_link %}<span aria-hidden="true"> | </span>{% endif %}
+      <a href="{{ resource.slidesurl }}">Download Slides</a>
+      {% assign has_previous_link = true %}
+    {% endif %}
+    {% if resource.bibtexurl %}
+      {% if has_previous_link %}<span aria-hidden="true"> | </span>{% endif %}
+      <a href="{{ resource.bibtexurl }}">Download BibTeX</a>
+    {% endif %}
+  </p>
+{% endif %}

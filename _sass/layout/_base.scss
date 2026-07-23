@@ -12,9 +12,11 @@ body {
   color: var(--global-text-color);
   background-color: var(--global-bg-color);
 
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   margin: 0;
   padding: $masthead-height 0 0;
-  padding-bottom: 9em;
   font-family: $global-font-family;
   line-height: 1.5;
 
@@ -315,34 +317,6 @@ nav {
   li ol {
     margin-top: 0;
   }
-}
-
-/* ==========================================================================
-   ANIMATIONS
-   ========================================================================== */
-
-   @-webkit-keyframes intro {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-  
-  @keyframes intro {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-
-/* Global animation transition */
-b, i, strong, em, blockquote, p, q, span, figure, img, h1, h2, header, input, a, tr, td, form button, input[type="submit"], .btn, .highlight, .archive__item-teaser {
-  -webkit-transition: $global-transition;
-  transition: $global-transition;
 }
 
 /* ==========================================================================
