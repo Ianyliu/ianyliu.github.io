@@ -24,7 +24,7 @@
         document.documentElement.removeAttribute('data-theme');
       }
     } catch (error) {
-      // Keep the server-rendered theme when browser storage is unavailable.
+      /* Keep the server-rendered theme when browser storage is unavailable. */
     }
   }());
   {% if page.url == "/" %}
@@ -36,7 +36,7 @@
     try {
       introSeen = window.sessionStorage.getItem('ian-cinematic-seen-v2') === '1';
     } catch (error) {
-      // A self-terminating CSS sequence remains safe when storage is blocked.
+      /* A self-terminating CSS sequence remains safe when storage is blocked. */
     }
 
     if (!reduceMotion && !introSeen) {

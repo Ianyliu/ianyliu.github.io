@@ -11,14 +11,15 @@ module.exports = defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? "github" : "line",
   use: {
-    baseURL: "http://127.0.0.1:4000",
+    baseURL: "http://127.0.0.1:4100",
     trace: "retain-on-failure",
   },
   webServer: {
-    command: "bundle exec jekyll serve --no-watch --host 127.0.0.1 --port 4000",
-    url: "http://127.0.0.1:4000",
+    command:
+      "bundle exec jekyll serve --config _config.yml,tests/browser/jekyll.yml --no-watch --host 127.0.0.1 --port 4100",
+    url: "http://127.0.0.1:4100",
     timeout: 120_000,
-    reuseExistingServer: true,
+    reuseExistingServer: false,
     env: {
       JEKYLL_ENV: "production",
     },
