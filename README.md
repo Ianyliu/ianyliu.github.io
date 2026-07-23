@@ -53,9 +53,10 @@ npm run build:js
 `npm test` verifies syntax and fails when `assets/js/main.min.js` is not in sync
 with its sources.
 
-The homepage cinematic runs once per browser session, respects reduced-motion
-preferences, and provides Skip and Replay controls. Its browser behavior is
-covered with Playwright:
+The homepage cinematic runs automatically on each of the first nine homepage
+visits stored in the browser, respects reduced-motion preferences, and provides
+Skip and unlimited Replay controls. Its browser behavior is covered with
+Playwright:
 
 ```bash
 npx playwright install --with-deps chromium
